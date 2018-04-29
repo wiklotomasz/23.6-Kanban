@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
 import NotesContainer from '../Note/NotesContainer';
+import Edit from '../../components/Edit';
 import styles from './Lane.css';
 
 const Lane = (props) => {
-  const { lane, laneNotes, updateLane, addNote, deleteLane } = props;
+  const { lane, laneNotes, updateLane, addNote, editLane, deleteLane } = props;
   const laneId = lane.id;
 
   return (
@@ -12,7 +13,20 @@ const Lane = (props) => {
         <div className={styles.LaneAddNote}>
           <button onClick={() => addNote({ task: ‘New Note’}, laneId)}>Add Note</button>
         </div>
-        <h4>{lane.name}</h4>
+        <Edit 
+          className={styles.LaneName}
+          editing={lane.editing}
+          value={lane.name}
+          onValueCheck={() => editLane({
+            lane.id, 
+            editing: true
+          })}
+          onUpdate={name => updateLane({ 
+            ...lane, 
+            name, 
+            editing: false
+          })}
+        />
         <div className={styles.LaneDelete}>
           <button onClick={() => deleteLane(laneId)}>Remove Lane</button>
         </div>
@@ -29,6 +43,7 @@ Lane.propTypes = {
 	lane: PropTypes.object,
 	laneNotes: PropTypes.array,
 	addNote: PropTypes.func,
+  editLane: PropTypes.func,
 	updateLane: PropTypes.func,
 	deleteLane: PropTypes.func,
 };
