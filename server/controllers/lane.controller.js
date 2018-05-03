@@ -29,12 +29,14 @@ export function addLane(req, res) {
 }
 
 export function editLane(req, res) {
-	let editedLane = prompt('Please enter column name');
-  editedLane.id = uuid();
-  if (!req.body.name) {
-    	res.status(403).end();
-  	}
-  res.json(editedLane);
+  Lane.findOne({id: req.params.laneId})
+    .then((lane) => {
+      lane.name = req.body.name;
+      return lane.save();
+    })
+    .then(() => {
+      res.json(200).end();
+    })
 }
 
 export function deleteLane(req, res) {
@@ -42,6 +44,18 @@ export function deleteLane(req, res) {
     if (err) {
       res.status(500).send(err);
     }
+
+    lane.notes.forEach((note) => {
+      Note.findOne({ id: note.id }).exec((err, note) => {
+        if (err) {
+          res.status(500).send(err);
+        }
+
+        note.remove(() => {
+          res.status(200).end();
+        });
+      })
+    })
 
     lane.remove(() => {
       res.status(200).end();

@@ -7,6 +7,7 @@ const initialState = {};
 export default function notes(state = initialState, action) {
   switch (action.type) {
     case CREATE_NOTE:
+return { ...state, [action.note.id]: action.note };
     case UPDATE_NOTE:
       return { ...state, [action.note.id]: action.note };
     case EDIT_NOTE: {
@@ -21,5 +22,3 @@ export default function notes(state = initialState, action) {
       return state;
   }
 }
-
-state.filter((note) => note.id !== action.noteId);

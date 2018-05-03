@@ -30,20 +30,24 @@ export function addNote(req, res) {
 }
 
 export function editNote(req, res) {
-    let editedNote = prompt('Please enter note name');
-    if (!req.body.name) {
-        res.status(403).end();
-      }
-    res.json(editedNote);
+    Note.findOne({id: req.params.noteId})
+    .then((note) => {
+      note.name = req.body.name;
+      return note.save();
+    })
+    .then(() => {
+      res.json(200).end();
+    })
 }
 
 export function deleteNote(req, res) {
-	Note.findOne({ id: req.params.noteId }).exec((err, note) => {
-		if (err) {
-			res.status(500).send(err);
-		}
-		note.remove(() => {
-      		res.status(200).end();
-    	});
-	});
+  Note.findOne({ id: req.params.noteId }).exec((err, note) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+
+    note.remove(() => {
+      res.status(200).end();
+    });
+  });
 }
