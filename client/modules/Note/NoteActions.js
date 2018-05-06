@@ -7,11 +7,11 @@ export const DELETE_NOTE = 'DELETE_NOTE';
 export const EDIT_NOTE = 'EDIT_NOTE';
 
 export function createNote(note, laneId) {
-  return {
-    type: CREATE_NOTE,
-    laneId,
-    note,
-    };
+ return {
+   type: CREATE_NOTE,
+   laneId,
+   note,
+ };
 }
 
 export function createNotes(notes) {
@@ -61,8 +61,8 @@ export function updateNoteRequest(noteId) {
 
 export function deleteNoteRequest(noteId, laneId) {
   return (dispatch) => {
-    return callApi('notes', 'delete', {noteId, laneId}).then(res => {
-      dispatch(deleteNote(res, {noteId, laneId}));
+    return callApi(`notes/${noteId}`, 'delete').then(() => {
+      dispatch(deleteNote(noteId, laneId));
     });
   };
 }
